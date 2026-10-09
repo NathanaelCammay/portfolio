@@ -64,8 +64,12 @@ Check the relevant guide before working on these areas:
 - Never publish his phone number, on any page or in the downloadable CV.
 - The CV download is `public/Nathanael-Cammay-CV.pdf`, a copy without the phone number that he supplies. The About page only shows the download button when that file exists.
 - There is no blog or writing section.
-- Projects are Markdown files in an Astro content collection. Each one covers the problem, the approach, the stack, what he decided and why, and links to the repo and live site.
-- No projects are ready yet. The portfolio itself is the first entry, so the Projects page has to look good with just one.
+- Projects are Markdown files in `src/content/projects/`. The file name becomes the URL slug.
+  - The frontmatter schema is in `src/content.config.ts`: `title`, `summary`, `stack`, `date`, optional `repo` and `live`, and `draft`.
+  - The body uses these sections: `## The problem`, `## The approach`, `## What I decided and why`.
+  - Set `draft: true` to hide a project that isn't finished.
+- The portfolio itself is the first project. The Projects page has to look good with just one.
+- Pages are built as `name.html` (`build.format: 'file'`), not `name/index.html`, so GitHub Pages serves them without a redirect. Link to pages without a trailing slash.
 - Design should be simple and polished.
   - Dark mode is the default, with a toggle to switch to light mode.
   - Remember the visitor's choice in `localStorage`, and set the theme before first paint so the page doesn't flash.
@@ -79,7 +83,7 @@ Tick each item off when its PR is merged.
 
 1. [x] `CLAUDE.md`
 2. [x] Astro skeleton and GitHub Actions deploy, live at `nathanaelcammay.github.io/portfolio/`
-3. [ ] Base layout, theme toggle, and the Home, About and Contact pages
+3. [x] Base layout, theme toggle, and the Home, About and Contact pages
 4. [ ] Projects collection, with this site as the first entry
 5. [ ] Custom domain: buy it, point DNS at GitHub Pages, turn on HTTPS, remove `base`
 6. [ ] Email on the domain, forwarded to Gmail

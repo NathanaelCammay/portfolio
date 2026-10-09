@@ -89,6 +89,30 @@ To avoid that, internal links are built with the `url()` helper in `src/lib/url.
 
 **What breaks without it.** Without Pages, the build would produce files that nobody can visit. Without the correct `base`, the page itself loads, but its styles, images and links break.
 
+### How URLs map to files, and why we avoid redirects
+
+A static server has no idea what an "About page" is. It only maps the URL path to a file in `dist/`. GitHub Pages tries these, in order:
+
+| Request | Pages looks for |
+|---|---|
+| `/portfolio/about` | `about.html`, or the folder `about/`, then redirects |
+| `/portfolio/about/` | `about/index.html` |
+
+By default, Astro builds every page as a folder, e.g. `about/index.html`. Our links point to `/portfolio/about`, with no trailing slash. So for every click, Pages found a folder and replied with **301 Moved Permanently**, telling the browser to try again at `/portfolio/about/`. That's an extra round trip between the browser and the server before the page even starts loading.
+
+`astro.config.mjs` now sets `build: { format: 'file' }`, so pages are built as `about.html`, `projects.html` and so on. `/portfolio/about` now matches a file directly and loads with **200 OK**, with no redirect.
+
+You can see this in your browser:
+1. Open DevTools with F12 and go to the **Network** tab.
+2. Click a nav link.
+3. Look at the **Status** column. The document request should say `200`, not `301`.
+
+**HTTP status codes worth knowing:**
+- **200**: OK, here's the file.
+- **301**: it's moved permanently, go to this other URL.
+- **404**: there's no such file.
+- **5xx**: the server itself broke. A static site on Pages basically never does this.
+
 ## 4. Smaller pieces
 
 - **`package-lock.json`** records the exact version of every dependency, including the dependencies of dependencies. The build machine installs from it, so it uses exactly what was tested locally. Always commit it.

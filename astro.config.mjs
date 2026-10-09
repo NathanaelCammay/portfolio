@@ -9,5 +9,8 @@ export default defineConfig({
   site: 'https://nathanaelcammay.github.io',
   // GitHub Pages serves this repo under /portfolio/. Remove once the custom domain is live.
   base: '/portfolio',
+  // Output about.html rather than about/index.html, so /about loads directly
+  // instead of GitHub Pages redirecting it to /about/ first.
+  build: { format: 'file' },
   integrations: [react()],
 });
