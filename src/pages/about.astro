@@ -1,0 +1,67 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Experience from '../components/Experience';
+import { certifications, cvFileName, education, experience, skills } from '../data/profile';
+import { url } from '../lib/url';
+
+// Only show the download button once the CV file has been added to public/.
+const hasCv = fs.existsSync(path.join(process.cwd(), 'public', cvFileName));
+---
+
+<BaseLayout title="About">
+	<h1>About</h1>
+	<p class="lead">
+		I'm a software developer with 4+ years of experience delivering and improving enterprise insurance systems at
+		Hollard Insurance.
+	</p>
+	<p>
+		Most of my work is on business-critical claims functionality. I work across the stack, from C#/.NET and
+		JavaScript in the application to stored procedures and performance tuning in SQL Server. I also build the
+		adaptors and integrations that move data reliably between internal and external systems. I work in a SAFe Agile
+		team alongside business analysts and testers, and I enjoy getting to the bottom of tricky production problems.
+	</p>
+	{
+		hasCv && (
+			<div class="actions">
+				<a class="button primary" href={url(cvFileName)} download>
+					Download CV (PDF)
+				</a>
+			</div>
+		)
+	}
+
+	<h2>Experience</h2>
+	<Experience roles={experience} />
+
+	<h2>Skills</h2>
+	<ul class="tags">
+		{skills.map((skill) => <li>{skill}</li>)}
+	</ul>
+
+	<h2>Education</h2>
+	{
+		education.map((item) => (
+			<div class="entry">
+				<div class="entry-head">
+					<h3>{item.qualification}</h3>
+					<span class="muted">{item.period}</span>
+				</div>
+				<p class="muted">{item.institution}</p>
+			</div>
+		))
+	}
+
+	<h2>Certifications</h2>
+	{
+		certifications.map((item) => (
+			<div class="entry">
+				<div class="entry-head">
+					<h3>{item.name}</h3>
+					<span class="muted">{item.period}</span>
+				</div>
+			</div>
+		))
+	}
+</BaseLayout>

@@ -1,31 +1,22 @@
 ---
-import Intro from '../components/Intro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile } from '../data/profile';
 import { url } from '../lib/url';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
-		<link rel="icon" href={url('favicon.ico')} />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Nathanael Cammay · Software Developer</title>
-	</head>
-	<body>
-		<Intro />
-	</body>
-</html>
-
-<style is:global>
-	body {
-		margin: 0;
-		min-height: 100vh;
-		display: grid;
-		place-items: center;
-		background: #0f1115;
-		color: #e6e8eb;
-		font-family: system-ui, sans-serif;
-		text-align: center;
-	}
-</style>
+<BaseLayout>
+	<p class="muted">{profile.title} · {profile.location}</p>
+	<h1>Hi, I'm Nathanael.</h1>
+	<p class="lead">
+		I build and maintain enterprise insurance systems with C#/.NET, SQL Server and JavaScript. That includes
+		claims functionality, database work, and the integrations that keep data flowing between platforms.
+	</p>
+	<p class="lead">
+		For 4+ years I've been a software developer at Hollard Insurance, working on the Purple Heron claims platform
+		in a SAFe Agile team.
+	</p>
+	<div class="actions">
+		<a class="button primary" href={url('contact')}>Get in touch</a>
+		<a class="button" href={url('about')}>About me</a>
+	</div>
+</BaseLayout>
