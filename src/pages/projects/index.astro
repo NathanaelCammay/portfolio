@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard';
+import { getProjects } from '../../lib/projects';
+import { url } from '../../lib/url';
+
+const projects = await getProjects();
+---
+
+<BaseLayout title="Projects" description="Projects by Nathanael Cammay, with the problem, approach and decisions behind each.">
+	<h1>Projects</h1>
+	<p class="lead">What I've built, and the decisions behind it. More are on the way.</p>
+	<div class="card-list">
+		{
+			projects.map((project) => (
+				<ProjectCard
+					title={project.data.title}
+					summary={project.data.summary}
+					stack={project.data.stack}
+					href={url(`projects/${project.id}`)}
+				/>
+			))
+		}
+	</div>
+</BaseLayout>

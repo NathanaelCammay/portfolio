@@ -1,0 +1,43 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects } from '../../lib/projects';
+import { url } from '../../lib/url';
+
+export async function getStaticPaths() {
+	const projects = await getProjects();
+	return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { title, summary, stack, repo, live } = project.data;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={title} description={summary}>
+	<p><a href={url('projects')}>← All projects</a></p>
+	<h1>{title}</h1>
+	<p class="lead">{summary}</p>
+	<ul class="tags" aria-label="Stack">
+		{stack.map((tech) => <li>{tech}</li>)}
+	</ul>
+	{
+		(repo || live) && (
+			<div class="actions">
+				{live && (
+					<a class="button primary" href={live}>
+						View live
+					</a>
+				)}
+				{repo && (
+					<a class="button" href={repo}>
+						Source code
+					</a>
+				)}
+			</div>
+		)
+	}
+	<article class="prose">
+		<Content />
+	</article>
+</BaseLayout>
