@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This is the portfolio site for Nathanael Cammay, a junior .NET developer based in Johannesburg. He works mainly in C#, T-SQL, JavaScript and React. The site is for clients, recruiters and hiring managers, and covers software development only.
+This is the portfolio site for Nathanael Cammay, a software developer based in Johannesburg. He has 4+ years of experience on enterprise insurance systems at Hollard Insurance. He works mainly in C#/.NET, SQL Server, JavaScript and React, and also on system integrations and REST APIs. Never describe him as "junior". The site is for clients, recruiters and hiring managers, and covers software development only.
 
 ## Working with Nathanael
 
@@ -13,7 +13,7 @@ This is the portfolio site for Nathanael Cammay, a junior .NET developer based i
   Assume he hasn't come across the concept before. For ordinary site code, one line on what changed and why is enough.
 - Each time an infrastructure step is finished, add or update its section in `docs/hosting.md`. That way the explanations outlive the chat, and he can walk an interviewer through how the site is built and deployed.
 - Some steps happen outside the repo, such as GitHub settings, the domain registrar, DNS records and `gh auth login`. For these, give the exact clicks and values to enter, and tell him what he should see when it has worked.
-- Don't invent experience, metrics, clients or projects. Bio and experience come from his CV. Ask him for anything the CV doesn't cover.
+- Don't invent experience, metrics, clients or projects. Bio and experience come from his latest CV, titled "Software Developer". Ask him for anything the CV doesn't cover.
 
 ## Git workflow
 
