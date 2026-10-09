@@ -1,0 +1,45 @@
+# Builds the site on every pull request, and builds + publishes it to GitHub Pages
+# on every push to main. Full explanation: docs/hosting.md
+
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Adds a "Run workflow" button on the Actions tab for manual redeploys.
+  workflow_dispatch:
+
+# Never run two deploys of the same branch at once; let the running one finish.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      # Installs Node and dependencies, runs `astro build`, and packages dist/ for Pages.
+      - name: Install, build and upload the site
+        uses: withastro/action@v6
+
+  deploy:
+    # Pull requests only build (as a check); only main gets published.
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

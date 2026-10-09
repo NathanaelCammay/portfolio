@@ -23,16 +23,33 @@ This is the portfolio site for Nathanael Cammay, a software developer based in J
 
 ## Stack
 
-- Astro with TypeScript. Style with plain CSS and custom properties, with no CSS framework. Use a React island only when a component genuinely needs client-side interactivity.
+- Astro + React, with TypeScript. Nathanael chose React, so write UI components in React (`src/components/*.tsx`). Use `.astro` files for pages (`src/pages/`) and layouts.
+- React components render to static HTML at build time. Only add a `client:*` directive when a component genuinely needs to run in the browser, such as the theme toggle.
+- The theme must be set by a small inline script in `<head>`, not by React. A React island runs too late to stop the page flashing the wrong theme.
+- Style with plain CSS and custom properties, with no CSS framework.
 - Output is static only: no server and no database.
 - Node 24 with npm.
 
+### Commands
+
+- `npm run dev`: dev server at `localhost:4321/portfolio/`. When Claude starts it, use `npx astro dev --background`. Manage it with `npx astro dev stop`, `status` and `logs`.
+- `npm run build`: builds the site into `dist/`. Run this before opening a PR.
+- `npm run preview`: serves the built `dist/` locally.
+
+### Astro docs
+
+Check the relevant guide before working on these areas:
+- [Routing](https://docs.astro.build/en/guides/routing/)
+- [Framework components (React)](https://docs.astro.build/en/guides/framework-components/)
+- [Content collections](https://docs.astro.build/en/guides/content-collections/)
+- [Styling](https://docs.astro.build/en/guides/styling/)
+
 ## Hosting
 
-- The site is hosted on GitHub Pages. A GitHub Actions workflow deploys it on every push to `main`.
+- The site is hosted on GitHub Pages. The workflow `.github/workflows/deploy.yml` builds every PR as a check, and builds and deploys every push to `main`. `docs/hosting.md` explains it.
 - The repo is `NathanaelCammay/portfolio` and is public.
 - Until a custom domain is connected, the site lives at `https://nathanaelcammay.github.io/portfolio/`, so Astro's `base` is set to `/portfolio`.
-  - Build every internal link and asset path from `import.meta.env.BASE_URL`, never from a hard-coded `/`.
+  - Build every internal link and asset path with `url()` from `src/lib/url.ts`, which adds the base. Never use a hard-coded `/`.
   - Then dropping the base path later is a one-line config change.
 - No custom domain has been bought yet. See the roadmap.
 
@@ -57,7 +74,7 @@ This is the portfolio site for Nathanael Cammay, a software developer based in J
 
 Tick each item off when its PR is merged.
 
-1. [ ] `CLAUDE.md`
+1. [x] `CLAUDE.md`
 2. [ ] Astro skeleton and GitHub Actions deploy, live at `nathanaelcammay.github.io/portfolio/`
 3. [ ] Base layout, theme toggle, and the Home, About and Contact pages
 4. [ ] Projects collection, with this site as the first entry
