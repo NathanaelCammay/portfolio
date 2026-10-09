@@ -59,7 +59,10 @@ Check the relevant guide before working on these areas:
   - Home
   - Projects: a list, plus one page per project
   - About: bio, experience and CV download
-  - Contact: an email link plus GitHub
+  - Contact: email, LinkedIn and GitHub links
+- Personal details, experience and skills live in `src/data/profile.ts`. Edit them there, not in the pages.
+- Never publish his phone number, on any page or in the downloadable CV.
+- The CV download is `public/Nathanael-Cammay-CV.pdf`, a copy without the phone number that he supplies. The About page only shows the download button when that file exists.
 - There is no blog or writing section.
 - Projects are Markdown files in an Astro content collection. Each one covers the problem, the approach, the stack, what he decided and why, and links to the repo and live site.
 - No projects are ready yet. The portfolio itself is the first entry, so the Projects page has to look good with just one.
@@ -75,7 +78,7 @@ Check the relevant guide before working on these areas:
 Tick each item off when its PR is merged.
 
 1. [x] `CLAUDE.md`
-2. [ ] Astro skeleton and GitHub Actions deploy, live at `nathanaelcammay.github.io/portfolio/`
+2. [x] Astro skeleton and GitHub Actions deploy, live at `nathanaelcammay.github.io/portfolio/`
 3. [ ] Base layout, theme toggle, and the Home, About and Contact pages
 4. [ ] Projects collection, with this site as the first entry
 5. [ ] Custom domain: buy it, point DNS at GitHub Pages, turn on HTTPS, remove `base`

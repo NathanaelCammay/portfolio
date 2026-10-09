@@ -1,0 +1,308 @@
+/* Colour tokens. Dark is the default; [data-theme] on <html> is set by the inline script in BaseLayout. */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0e1116;
+  --surface: #161b22;
+  --border: #262c36;
+  --text: #e6edf3;
+  --muted: #9aa4b2;
+  --accent: #2dd4bf;
+  --accent-contrast: #0e1116;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --muted: #59636e;
+  --accent: #0f766e;
+  --accent-contrast: #ffffff;
+}
+
+:root {
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius: 10px;
+  --max-width: 46rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+main.container {
+  flex: 1;
+  padding-block: 3rem 4rem;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.05rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.lead {
+  font-size: 1.15rem;
+  color: var(--muted);
+  max-width: 38rem;
+}
+
+/* Header */
+.site-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  flex: 1;
+}
+
+.site-nav .brand {
+  font-weight: 650;
+  color: var(--text);
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav ul a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-nav ul a:hover,
+.site-nav ul a[aria-current='page'] {
+  color: var(--text);
+}
+
+.site-nav ul a[aria-current='page'] {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+/* Theme toggle: both icons are rendered, CSS shows the one for the theme you'd switch to. */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+.theme-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+:root[data-theme='dark'] .theme-toggle .icon-moon,
+:root[data-theme='light'] .theme-toggle .icon-sun {
+  display: none;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.button.primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.button:hover {
+  text-decoration: none;
+  filter: brightness(1.1);
+}
+
+/* Lists of roles, education etc. */
+.entry {
+  margin-top: 1.5rem;
+}
+
+.entry-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 1rem;
+}
+
+.entry-head h3 {
+  margin: 0;
+}
+
+.entry ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.entry li + li {
+  margin-top: 0.35rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.tags li {
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+
+/* Contact */
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.contact-list li {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.contact-list .label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.contact-list a {
+  overflow-wrap: anywhere;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding-block: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.site-footer .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.site-footer ul {
+  display: flex;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

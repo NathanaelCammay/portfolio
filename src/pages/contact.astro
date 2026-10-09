@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile } from '../data/profile';
+---
+
+<BaseLayout title="Contact">
+	<h1>Contact</h1>
+	<p class="lead">
+		Whether it's a role, a freelance project or just a question, I'd like to hear from you. Email is the quickest way
+		to reach me.
+	</p>
+	<ul class="contact-list">
+		<li>
+			<span class="label">Email</span>
+			<a href={`mailto:${profile.email}`}>{profile.email}</a>
+		</li>
+		<li>
+			<span class="label">LinkedIn</span>
+			<a href={profile.linkedin}>linkedin.com/in/nathanaelcammay</a>
+		</li>
+		<li>
+			<span class="label">GitHub</span>
+			<a href={profile.github}>github.com/NathanaelCammay</a>
+		</li>
+	</ul>
+	<p class="muted" style="margin-top: 1.5rem">Based in {profile.location}.</p>
+</BaseLayout>

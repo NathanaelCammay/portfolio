@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav';
+import ThemeToggle from '../components/ThemeToggle';
+import Footer from '../components/Footer';
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title,
+	description = `${profile.name}, software developer in Johannesburg building enterprise systems with C#/.NET, SQL Server and JavaScript.`,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.title}`;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+		<link rel="icon" href={url('favicon.ico')} />
+		<title>{fullTitle}</title>
+		<!-- Runs before the page paints, so a saved light theme never flashes dark first. -->
+		<script is:inline>
+			try {
+				const saved = localStorage.getItem('theme');
+				if (saved === 'light' || saved === 'dark') document.documentElement.dataset.theme = saved;
+			} catch {}
+		</script>
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="container">
+				<Nav currentPath={Astro.url.pathname} />
+				<ThemeToggle client:load />
+			</div>
+		</header>
+		<main class="container">
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>
