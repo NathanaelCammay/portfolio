@@ -63,6 +63,7 @@ Check the relevant guide before working on these areas:
   - 4 A and 4 AAAA records on `@`, pointing at GitHub Pages' addresses
   - a CNAME from `www` to `nathanaelcammay.github.io`
   - a `_github-pages-challenge-…` TXT record that verifies the domain with GitHub
+  - a `google-site-verification=…` TXT record on `@` for Google Search Console. Search Console is a Domain property, with the sitemap submitted.
 - All records are "DNS only", never proxied. Proxying would break GitHub's HTTPS certificate.
 - The custom domain is set in the repo's Settings → Pages, not with a `CNAME` file. A `CNAME` file isn't used with Actions-based deploys.
 
