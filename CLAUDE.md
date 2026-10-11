@@ -42,7 +42,7 @@ This is the portfolio site for Nathanael Cammay, a software developer based in J
 - `BaseLayout.astro` sets the title, description, canonical URL, Open Graph and Twitter tags for every page. Pass `title` and `description` from each page. Pass `type="article"` for project pages, and `noindex` for pages that shouldn't be in search results.
 - The home page passes schema.org `Person` JSON-LD through the `jsonLd` prop. Keep it in step with `src/data/profile.ts`.
 - The sitemap comes from `@astrojs/sitemap`. `public/robots.txt` points to it.
-- Keep Lighthouse at 100 in all four categories. Interactive islands should use `client:idle` unless they have to work instantly.
+- Keep Lighthouse at 100 in all four categories. The one accepted exception is 99 Performance on the home page, which is the cost of the self-hosted Geist font. Interactive islands should use `client:idle` unless they have to work instantly.
 
 ### Astro docs
 
@@ -69,27 +69,37 @@ Check the relevant guide before working on these areas:
 
 ## Site
 
-- Pages:
-  - Home
-  - Projects: a list, plus one page per project
-  - About: bio, experience and CV download
-  - Contact: email, LinkedIn and GitHub links
-- Personal details, experience and skills live in `src/data/profile.ts`. Edit them there, not in the pages.
+- **One page** (`src/pages/index.astro`) with sections About, Experience, Projects and Contact. Project write-ups are their own pages (`src/pages/projects/[id].astro`).
+  - The old `/about`, `/contact` and `/projects` URLs redirect to the matching section, via `redirects` in `astro.config.mjs`.
+- **Layouts:**
+  - `BaseLayout.astro` is the document shell: head, meta tags and the theme script.
+  - The home page builds its own two-column layout.
+  - Inner pages (project write-ups, 404) use `PageLayout.astro`.
+- Personal details, experience, education and the toolkit live in `src/data/profile.ts`. Edit them there, not in the pages.
 - Never publish his phone number, on any page or in the downloadable CV.
-- The CV download is `public/Nathanael-Cammay-CV.pdf`, a copy without the phone number that he supplies. The About page only shows the download button when that file exists.
+- The CV download is `public/Nathanael-Cammay-CV.pdf`, a copy without the phone number that he supplies. The download link only appears when that file exists.
 - There is no blog or writing section.
+- No photo for now. He'll add one later.
 - Projects are Markdown files in `src/content/projects/`. The file name becomes the URL slug.
   - The frontmatter schema is in `src/content.config.ts`: `title`, `summary`, `stack`, `date`, optional `repo` and `live`, and `draft`.
   - The body uses these sections: `## The problem`, `## The approach`, `## What I decided and why`.
   - Set `draft: true` to hide a project that isn't finished.
-- The portfolio itself is the first project. The Projects page has to look good with just one.
+  - The Projects section has to look good with just one entry.
 - Pages are built as `name.html` (`build.format: 'file'`), not `name/index.html`, so GitHub Pages serves them without a redirect. Link to pages without a trailing slash.
-- Design should be simple and polished.
-  - Dark mode is the default, with a toggle to switch to light mode.
-  - Remember the visitor's choice in `localStorage`, and set the theme before first paint so the page doesn't flash.
-  - Define all colours as CSS custom properties.
+
+### Design
+
+Nathanael chose this direction:
+- **Layout:** Brittany Chiang's structure (sticky left sidebar, scrolling right column), finished with Chánh Đại's level of craft. Don't clone either site's colours or signature effects.
+- **Colour: monochrome only.** No accent colour. Every colour is a custom property in `src/styles/global.css`.
+- **Type:** Geist for text and Geist Mono for small labels (dates, stack, section names). Both are self-hosted through `@fontsource-variable`, and the main Latin font file is preloaded.
+- **Desktop:** the sidebar holds the name, title, pitch, section nav (`SectionNav.tsx` highlights the section in view), social links and the theme toggle.
+- **Phones:** one column, with sticky mono section labels.
+- **Detail:** hairline borders, mono tech tags with small corner radius (not pills), and restrained hover states (hovering an entry dims its siblings, arrows nudge). Respect `prefers-reduced-motion`.
+- **Theme:** dark by default, with a toggle to light. The choice is remembered in `localStorage` and applied before first paint, so the page never flashes the wrong theme.
 - No skill bars or percentage ratings.
-- Use semantic HTML and keep enough contrast in both themes. The theme toggle must work from the keyboard, and the layout must work at phone width.
+- **Accessibility:** use semantic HTML and keep AA contrast in both themes. The toggle and nav must work from the keyboard, and the layout must work at phone width.
+- Before opening a design PR, check it visually: screenshot desktop (both themes) and phone with headless Chrome.
 
 ## Roadmap
 

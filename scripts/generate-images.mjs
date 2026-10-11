@@ -36,19 +36,18 @@ await writeFile('public/favicon.ico', Buffer.concat([header, ...pngs]));
 const font = "'Segoe UI', 'Helvetica Neue', Arial, sans-serif";
 const og = `
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
-  <rect width="1200" height="630" fill="#0e1116"/>
-  <rect x="0" y="0" width="12" height="630" fill="#2dd4bf"/>
-  <g transform="translate(96 96) scale(1.5)">
-    <rect width="64" height="64" rx="14" fill="#161b22" stroke="#262c36" stroke-width="1.5"/>
-    <g fill="none" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+    <g transform="translate(96 96) scale(1.5)">
+    <rect width="64" height="64" rx="14" fill="#131313" stroke="#2a2a2a" stroke-width="1.5"/>
+    <g fill="none" stroke="#ededed" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
       <path d="M11 45V19l16 26V19"/>
       <path d="M53.6 22.6a12 13 0 1 0 0 18.8"/>
     </g>
   </g>
-  <text x="96" y="330" font-family="${font}" font-size="84" font-weight="700" fill="#e6edf3">Nathanael Cammay</text>
-  <text x="96" y="400" font-family="${font}" font-size="44" fill="#2dd4bf">Software Developer</text>
-  <text x="96" y="470" font-family="${font}" font-size="32" fill="#9aa4b2">C#/.NET · SQL Server · JavaScript · React</text>
-  <text x="96" y="560" font-family="${font}" font-size="30" fill="#9aa4b2">nathanaelcammay.com</text>
+  <text x="96" y="330" font-family="${font}" font-size="84" font-weight="700" fill="#ededed">Nathanael Cammay</text>
+  <text x="96" y="400" font-family="${font}" font-size="44" fill="#a3a3a3">Software Developer</text>
+  <text x="96" y="470" font-family="${font}" font-size="32" fill="#8a8a8a">C#/.NET · SQL Server · JavaScript · React</text>
+  <text x="96" y="560" font-family="${font}" font-size="30" fill="#8a8a8a">nathanaelcammay.com</text>
 </svg>`;
 await sharp(Buffer.from(og)).png().toFile('public/og-image.png');
 

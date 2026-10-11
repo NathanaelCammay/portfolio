@@ -237,7 +237,13 @@ Search Console is Google's dashboard for site owners. It shows:
 
 **Indexing takes time.** It usually takes days, sometimes a couple of weeks, before searching your name shows the site and before the reports have data. Asking for indexing again doesn't speed it up. Check **Indexing → Pages** after about a week, to see which pages are indexed and why any aren't.
 
-**Lighthouse** is Google's audit tool. It's built into Chrome DevTools, under the **Lighthouse** tab. It scores Performance, Accessibility, Best Practices and SEO out of 100, and lists anything that's wrong. This site scores 100 in all four. The one thing that cost points was React's runtime, which is loaded for the theme toggle. Hydrating the toggle with `client:idle` (once the page has finished loading) instead of `client:load` took it out of the critical path.
+**Lighthouse** is Google's audit tool. It's built into Chrome DevTools, under the **Lighthouse** tab. It scores Performance, Accessibility, Best Practices and SEO out of 100, and lists anything that's wrong. This site scores 100 in Accessibility, Best Practices and SEO everywhere. Performance is 100 on project pages and 99 on the home page. Things that were tuned:
+- **React's runtime** is loaded for the theme toggle and section nav. Hydrating them with `client:idle` (once the page has finished loading) instead of `client:load` takes them out of the critical path.
+- **CSS is inlined** into each page (`build.inlineStylesheets: 'always'`). It's only about 3 KB compressed, and inlining saves a round trip before the browser can draw anything.
+- **The main font file is preloaded** (`<link rel="preload">` in `BaseLayout.astro`), so the browser fetches it straight away instead of waiting until it has read the CSS.
+- **Fonts are self-hosted** (`@fontsource-variable/geist`). They're served from our own domain, which avoids a connection to Google Fonts and doesn't send visitors' details to a third party.
+
+The last point on the home page is Lighthouse's simulated slow phone network waiting for that font. That's an accepted trade-off for using a real typeface instead of the system font.
 
 ## Deferred
 

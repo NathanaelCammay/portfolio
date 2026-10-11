@@ -1,8 +1,6 @@
 ---
 import '../styles/global.css';
-import Nav from '../components/Nav';
-import ThemeToggle from '../components/ThemeToggle';
-import Footer from '../components/Footer';
+import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import { profile } from '../data/profile';
 import { cleanPath, url } from '../lib/url';
 
@@ -39,8 +37,10 @@ const ogImage = new URL(url('og-image.png'), Astro.site).href;
 		<title>{fullTitle}</title>
 		<meta name="description" content={description} />
 		{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
-		<meta name="theme-color" content="#0e1116" />
+		<meta name="theme-color" content="#0a0a0a" />
 		<meta name="generator" content={Astro.generator} />
+
+		<link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
 
 		<link rel="icon" href={url('favicon.ico')} sizes="48x48" />
 		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
@@ -69,15 +69,6 @@ const ogImage = new URL(url('og-image.png'), Astro.site).href;
 		</script>
 	</head>
 	<body>
-		<header class="site-header">
-			<div class="container">
-				<Nav currentPath={Astro.url.pathname} />
-				<ThemeToggle client:idle />
-			</div>
-		</header>
-		<main class="container">
-			<slot />
-		</main>
-		<Footer />
+		<slot />
 	</body>
 </html>

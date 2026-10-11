@@ -42,7 +42,12 @@ Astro keeps the React development experience but outputs real HTML for every pag
 - The DNS records point straight at GitHub Pages in "DNS only" mode, rather than through Cloudflare's proxy, so GitHub can issue and renew the HTTPS certificate itself.
 - I also verified the domain with GitHub, so no other GitHub account can claim it for their own site.
 
-**Only ship JavaScript where it's needed.** The theme toggle is the only interactive component, so it's the only code that runs in the browser. A tiny inline script applies your saved theme before the page appears, so light-mode visitors don't see a flash of dark.
+**A restrained, single-page design.**
+- The first version looked like a template: system font, a bright accent colour, pill-shaped tags. I redesigned it around typography instead: Geist, with a monospace for small labels.
+- The palette is monochrome, and the layout is a single page with a sticky sidebar.
+- I studied a handful of well-regarded developer portfolios first. I picked a structure that suits experience-led content, and passed on designs that only work when there's a lot of content to fill them.
+
+**Only ship JavaScript where it's needed.** Only two components run in the browser: the theme toggle, and the section nav that highlights where you are on the page. Both load after the page has finished drawing. A tiny inline script applies your saved theme before the page appears, so light-mode visitors don't see a flash of dark.
 
 **Serve pages as `about.html`, not `about/index.html`.** With folder-style output, GitHub Pages answered every nav click with a redirect to add a trailing slash. Switching Astro's build format removed that extra round trip.
 
