@@ -161,6 +161,7 @@ The answers come from **records** we added in Cloudflare (**DNS → Records**):
 | AAAA ×4 | `@` | `2606:50c0:8000::153` … `8003::153` | GitHub Pages' IPv6 addresses |
 | CNAME | `www` | `nathanaelcammay.github.io` | Makes `www.` work too; GitHub redirects it to the bare domain |
 | TXT | `_github-pages-challenge-NathanaelCammay` | a random string from GitHub | Proves to GitHub that we control the domain |
+| TXT | `@` | `google-site-verification=…` | Proves to Google Search Console that we control the domain (see section 6) |
 
 **What each record type does:**
 - **A** maps a name to an IPv4 address: the classic four numbers, like `185.199.108.153`.
@@ -216,7 +217,25 @@ People aren't the only visitors. Search engines crawl the site, and apps like Li
 
 **After deploying**, it's worth checking:
 - LinkedIn's [Post Inspector](https://www.linkedin.com/post-inspector/) shows exactly what your preview card looks like. It also makes LinkedIn re-read the page if you've changed it.
-- [Google Search Console](https://search.google.com/search-console) lets you prove you own the domain (with another DNS TXT record), submit the sitemap, and see which searches show your site.
+- [Google Search Console](https://search.google.com/search-console) is set up for this site (see below).
+
+### Google Search Console
+
+Search Console is Google's dashboard for site owners. It shows:
+- which searches the site appeared in, and how often people clicked
+- which pages Google has indexed
+- any problems it found
+
+**How it was set up:**
+1. **Added a Domain property** for `nathanaelcammay.com`, rather than a "URL prefix" property. A Domain property covers every variant of the site in one place: `http`, `https`, `www` and any future subdomain. The catch is that it can only be verified through DNS.
+2. **Verified ownership** with a TXT record on `@`, containing `google-site-verification=…`.
+   - Only someone who controls the domain's DNS can publish that value, which is what makes it proof.
+   - TXT records can share the root name with the A and AAAA records. Only CNAMEs have to be alone on a name.
+   - **Don't delete it.** Google re-checks it from time to time, and removing it loses access to the property.
+3. **Submitted the sitemap** under **Sitemaps**, as the full URL `https://nathanaelcammay.com/sitemap-index.xml`. A Domain property needs the full URL; a URL-prefix property would accept just the file name.
+4. **Requested indexing** of the home page under **URL inspection**. This puts the page in Google's priority crawl queue.
+
+**Indexing takes time.** It usually takes days, sometimes a couple of weeks, before searching your name shows the site and before the reports have data. Asking for indexing again doesn't speed it up. Check **Indexing → Pages** after about a week, to see which pages are indexed and why any aren't.
 
 **Lighthouse** is Google's audit tool. It's built into Chrome DevTools, under the **Lighthouse** tab. It scores Performance, Accessibility, Best Practices and SEO out of 100, and lists anything that's wrong. This site scores 100 in all four. The one thing that cost points was React's runtime, which is loaded for the theme toggle. Hydrating the toggle with `client:idle` (once the page has finished loading) instead of `client:load` took it out of the critical path.
 
