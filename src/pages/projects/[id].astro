@@ -1,6 +1,6 @@
 ---
 import { render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
 import { getProjects } from '../../lib/projects';
 import { url } from '../../lib/url';
 
@@ -14,11 +14,11 @@ const { title, summary, stack, repo, live } = project.data;
 const { Content } = await render(project);
 ---
 
-<BaseLayout title={title} description={summary} type="article">
-	<p><a href={url('projects')}>← All projects</a></p>
+<PageLayout title={title} description={summary} type="article">
+	<a class="back" href={url('#projects')}>← All projects</a>
 	<h1>{title}</h1>
 	<p class="lead">{summary}</p>
-	<ul class="tags" aria-label="Stack">
+	<ul class="tech" aria-label="Stack">
 		{stack.map((tech) => <li>{tech}</li>)}
 	</ul>
 	{
@@ -40,4 +40,4 @@ const { Content } = await render(project);
 	<article class="prose">
 		<Content />
 	</article>
-</BaseLayout>
+</PageLayout>

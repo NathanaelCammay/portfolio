@@ -1,0 +1,25 @@
+---
+// Layout for inner pages (project write-ups, 404): a slim header, a single reading column and a footer.
+import BaseLayout from './BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle';
+import SocialLinks from '../components/SocialLinks';
+import { profile } from '../data/profile';
+import { url } from '../lib/url';
+
+type Props = Parameters<typeof BaseLayout>[0];
+---
+
+<BaseLayout {...Astro.props}>
+	<div class="page">
+		<header class="page-header">
+			<a class="home" href={url()}>{profile.name}</a>
+			<ThemeToggle client:idle />
+		</header>
+		<main class="page-main">
+			<slot />
+		</main>
+		<footer class="page-footer">
+			<SocialLinks />
+		</footer>
+	</div>
+</BaseLayout>

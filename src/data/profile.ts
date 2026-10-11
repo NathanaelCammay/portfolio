@@ -4,60 +4,18 @@
 export const profile = {
   name: 'Nathanael Cammay',
   title: 'Software Developer',
+  pitch: 'I build and maintain enterprise insurance systems with C#/.NET, SQL Server and JavaScript.',
   location: 'Johannesburg, South Africa',
   email: 'nathanaelcammay@gmail.com',
   github: 'https://github.com/NathanaelCammay',
   linkedin: 'https://www.linkedin.com/in/nathanaelcammay/',
 };
 
-// Drop a phone-free copy of the CV into public/ under this name and the About page links to it.
+// Phone-free copy of the CV in public/. The download links only appear if the file exists.
 export const cvFileName = 'Nathanael-Cammay-CV.pdf';
 
-export interface Role {
-  title: string;
-  company: string;
-  period: string;
-  points: string[];
-}
-
-export const experience: Role[] = [
-  {
-    title: 'Software Developer',
-    company: 'Hollard Insurance',
-    period: 'May 2022 – Present',
-    points: [
-      'Progressed from Graduate Software Developer to Developer on the Purple Heron claims platform.',
-      'Build and maintain business-critical functionality in C#, .NET, SQL Server and JavaScript (Knockout.js, jQuery, AJAX).',
-      'Design database changes: stored procedures, scripts, data fixes and performance optimisations.',
-      'Develop adaptor solutions and integrations that keep data flowing reliably between internal and external platforms.',
-      'Investigate and resolve production incidents and defects, and take part in technical design, estimation and code reviews.',
-      'Use Azure DevOps for source control, work tracking, CI/CD and deployments, within a SAFe Agile team.',
-      'Also on the NEXUS team: organised IT knowledge-sharing sessions and a department-wide Promptathon, and was part of the winning team.',
-    ],
-  },
-  {
-    title: 'Software Development Trainee',
-    company: 'Mindworx Consulting and Academy',
-    period: 'Mar 2021 – Feb 2022',
-    points: [
-      'Completed an NQF5 Systems Development Higher Certificate covering C#, SQL, Java, VB.NET, web development and project management.',
-      'Built two projects in a development team, a software application and a website, presenting progress to stakeholders weekly.',
-      'Completed an Azure DevOps bootcamp.',
-    ],
-  },
-];
-
-export const education = [
-  { qualification: 'BCom Information Management', institution: 'Damelin College', period: '2017 – 2019' },
-  { qualification: 'NQF5 Systems Development Higher Certificate', institution: 'Mindworx Academy', period: '2022' },
-];
-
-export const certifications = [
-  { name: 'Microsoft Certified: Azure Fundamentals', period: '2022' },
-  { name: 'Certified SAFe Practitioner', period: '2022 – 2023' },
-];
-
-export const skills = [
+// From the CV's skills section; shown as a single line in About rather than rated or charted.
+export const toolkit = [
   'C#',
   '.NET',
   'ASP.NET MVC',
@@ -66,8 +24,39 @@ export const skills = [
   'REST APIs',
   'JavaScript',
   'React',
-  'Knockout.js',
-  'jQuery',
   'Azure DevOps',
-  'CI/CD',
+];
+
+export interface Role {
+  period: string;
+  title: string;
+  company: string;
+  summary: string;
+  tech: string[];
+}
+
+export const experience: Role[] = [
+  {
+    period: '2022 — Present',
+    title: 'Software Developer',
+    company: 'Hollard Insurance',
+    summary:
+      'Progressed from graduate to developer on Purple Heron, Hollard’s claims platform. I build business-critical functionality across C#/.NET, SQL Server and JavaScript, design database changes and performance optimisations, and develop the adaptors and integrations that keep data flowing between internal and external systems. I also resolve production incidents and take part in technical design, estimation and code reviews within a SAFe Agile team. Outside delivery, I helped run IT knowledge-sharing sessions and a department-wide Promptathon, where I was part of the winning team.',
+    tech: ['C#', '.NET', 'SQL Server', 'JavaScript', 'Knockout.js', 'jQuery', 'Azure DevOps'],
+  },
+  {
+    period: '2021 — 2022',
+    title: 'Software Development Trainee',
+    company: 'Mindworx Consulting and Academy',
+    summary:
+      'Completed an NQF5 Systems Development Higher Certificate covering C#, SQL, Java, VB.NET and web development. Built a software application and a website as part of a development team, presenting progress to stakeholders weekly, and completed an Azure DevOps bootcamp.',
+    tech: ['C#', 'SQL', 'Java', 'VB.NET', 'Azure DevOps'],
+  },
+];
+
+export const education = [
+  { period: '2022', title: 'NQF5 Systems Development Higher Certificate', place: 'Mindworx Academy' },
+  { period: '2017 — 2019', title: 'BCom Information Management', place: 'Damelin College' },
+  { period: '2022', title: 'Microsoft Certified: Azure Fundamentals', place: 'Microsoft' },
+  { period: '2022 — 2023', title: 'Certified SAFe Practitioner', place: 'Scaled Agile' },
 ];
