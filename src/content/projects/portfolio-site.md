@@ -4,7 +4,7 @@ summary: A static portfolio built with Astro and React, deployed to GitHub Pages
 stack: [Astro, React, TypeScript, CSS, GitHub Actions, GitHub Pages]
 date: 2026-10-09
 repo: https://github.com/NathanaelCammay/portfolio
-live: https://nathanaelcammay.github.io/portfolio/
+live: https://nathanaelcammay.com
 ---
 
 ## The problem
@@ -36,6 +36,11 @@ Astro keeps the React development experience but outputs real HTML for every pag
 - It's free and needs no server to maintain.
 - Building on every pull request means a broken change can't reach the live site.
 - It's the same CI/CD idea I use with Azure DevOps at work, set up from scratch.
+
+**My own domain, with Cloudflare as registrar and DNS.**
+- Cloudflare sells domains at cost with no renewal markup, and the domain record is private by default.
+- The DNS records point straight at GitHub Pages in "DNS only" mode, rather than through Cloudflare's proxy, so GitHub can issue and renew the HTTPS certificate itself.
+- I also verified the domain with GitHub, so no other GitHub account can claim it for their own site.
 
 **Only ship JavaScript where it's needed.** The theme toggle is the only interactive component, so it's the only code that runs in the browser. A tiny inline script applies your saved theme before the page appears, so light-mode visitors don't see a flash of dark.
 

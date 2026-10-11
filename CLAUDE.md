@@ -32,7 +32,7 @@ This is the portfolio site for Nathanael Cammay, a software developer based in J
 
 ### Commands
 
-- `npm run dev`: dev server at `localhost:4321/portfolio/`. When Claude starts it, use `npx astro dev --background`. Manage it with `npx astro dev stop`, `status` and `logs`.
+- `npm run dev`: dev server at `localhost:4321/`. When Claude starts it, use `npx astro dev --background`. Manage it with `npx astro dev stop`, `status` and `logs`.
 - `npm run build`: builds the site into `dist/`. Run this before opening a PR.
 - `npm run preview`: serves the built `dist/` locally.
 
@@ -48,10 +48,15 @@ Check the relevant guide before working on these areas:
 
 - The site is hosted on GitHub Pages. The workflow `.github/workflows/deploy.yml` builds every PR as a check, and builds and deploys every push to `main`. `docs/hosting.md` explains it.
 - The repo is `NathanaelCammay/portfolio` and is public.
-- Until a custom domain is connected, the site lives at `https://nathanaelcammay.github.io/portfolio/`, so Astro's `base` is set to `/portfolio`.
-  - Build every internal link and asset path with `url()` from `src/lib/url.ts`, which adds the base. Never use a hard-coded `/`.
-  - Then dropping the base path later is a one-line config change.
-- No custom domain has been bought yet. See the roadmap.
+- The site lives at `https://nathanaelcammay.com`, served from the root with no `base`.
+  - `nathanaelcammay.github.io/portfolio/` redirects there automatically.
+  - Still build internal links and asset paths with `url()` from `src/lib/url.ts`, so a base path could be reintroduced without touching every link.
+- The domain is registered with Cloudflare, which also runs its DNS. Records:
+  - 4 A and 4 AAAA records on `@`, pointing at GitHub Pages' addresses
+  - a CNAME from `www` to `nathanaelcammay.github.io`
+  - a `_github-pages-challenge-…` TXT record that verifies the domain with GitHub
+- All records are "DNS only", never proxied. Proxying would break GitHub's HTTPS certificate.
+- The custom domain is set in the repo's Settings → Pages, not with a `CNAME` file. A `CNAME` file isn't used with Actions-based deploys.
 
 ## Site
 
@@ -84,7 +89,7 @@ Tick each item off when its PR is merged.
 1. [x] `CLAUDE.md`
 2. [x] Astro skeleton and GitHub Actions deploy, live at `nathanaelcammay.github.io/portfolio/`
 3. [x] Base layout, theme toggle, and the Home, About and Contact pages
-4. [ ] Projects collection, with this site as the first entry
-5. [ ] Custom domain: buy it, point DNS at GitHub Pages, turn on HTTPS, remove `base`
+4. [x] Projects collection, with this site as the first entry
+5. [x] Custom domain: buy it, point DNS at GitHub Pages, turn on HTTPS, remove `base`
 6. [ ] Email on the domain, forwarded to Gmail
 7. [ ] Polish: SEO meta tags, favicon, social preview image, Lighthouse pass

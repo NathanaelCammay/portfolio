@@ -15,7 +15,10 @@ GitHub Actions starts a fresh Linux machine and runs .github/workflows/deploy.ym
         └── deploy job: hand the package to GitHub Pages
                 │
                 ▼
-GitHub Pages serves the files at https://nathanaelcammay.github.io/portfolio/
+GitHub Pages serves the files
+        │
+        ▼
+Visitors type nathanaelcammay.com → DNS points them at GitHub Pages → they get the site over HTTPS
 ```
 
 Nothing runs on your own computer for a deploy. Merging is the deploy.
@@ -79,13 +82,13 @@ The steps reuse ready-made actions instead of writing everything by hand:
 
 **The one-time setting.** Pages has to be told where its files come from. In the repo, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**. The alternative, "Deploy from a branch", serves files straight from a branch with no build step, and that doesn't work for a site that needs building.
 
-**Why the URL ends in `/portfolio/`.** Every GitHub account gets one address: `nathanaelcammay.github.io`.
+**Why the URL used to end in `/portfolio/`.** Every GitHub account gets one address: `nathanaelcammay.github.io`.
 - A repo named exactly `nathanaelcammay.github.io` is served at the root of that address.
 - Every other repo is served in a sub-folder named after the repo, so this one lives at `/portfolio/`.
 
-That's why `astro.config.mjs` sets `base: '/portfolio'`. Every link and asset path has to start with `/portfolio/`. A link to `/favicon.svg` would point at `nathanaelcammay.github.io/favicon.svg`, which doesn't exist, so it would 404.
+Until the custom domain was connected, `astro.config.mjs` set `base: '/portfolio'`. Every link and asset path had to start with `/portfolio/`. A link to `/favicon.svg` would point at `nathanaelcammay.github.io/favicon.svg`, which doesn't exist, so it would 404.
 
-To avoid that, internal links are built with the `url()` helper in `src/lib/url.ts`, which adds the base automatically. When the custom domain is connected (roadmap step 5), the site moves to the root of its own address. At that point we delete the `base` line, and every link still works.
+To avoid that, internal links are built with the `url()` helper in `src/lib/url.ts`, which adds the base automatically. When the custom domain was connected, the site moved to the root of its own address. Removing the `base` line was the only change needed, and every link kept working. The helper is still used, in case a base path is ever needed again.
 
 **What breaks without it.** Without Pages, the build would produce files that nobody can visit. Without the correct `base`, the page itself loads, but its styles, images and links break.
 
@@ -95,12 +98,12 @@ A static server has no idea what an "About page" is. It only maps the URL path t
 
 | Request | Pages looks for |
 |---|---|
-| `/portfolio/about` | `about.html`, or the folder `about/`, then redirects |
-| `/portfolio/about/` | `about/index.html` |
+| `/about` | `about.html`, or the folder `about/`, then redirects |
+| `/about/` | `about/index.html` |
 
-By default, Astro builds every page as a folder, e.g. `about/index.html`. Our links point to `/portfolio/about`, with no trailing slash. So for every click, Pages found a folder and replied with **301 Moved Permanently**, telling the browser to try again at `/portfolio/about/`. That's an extra round trip between the browser and the server before the page even starts loading.
+By default, Astro builds every page as a folder, e.g. `about/index.html`. Our links point to `/about`, with no trailing slash. So for every click, Pages found a folder and replied with **301 Moved Permanently**, telling the browser to try again at `/about/`. That's an extra round trip between the browser and the server before the page even starts loading.
 
-`astro.config.mjs` now sets `build: { format: 'file' }`, so pages are built as `about.html`, `projects.html` and so on. `/portfolio/about` now matches a file directly and loads with **200 OK**, with no redirect.
+`astro.config.mjs` now sets `build: { format: 'file' }`, so pages are built as `about.html`, `projects.html` and so on. `/about` now matches a file directly and loads with **200 OK**, with no redirect.
 
 You can see this in your browser:
 1. Open DevTools with F12 and go to the **Network** tab.
@@ -122,7 +125,78 @@ You can see this in your browser:
   - `dist/`: rebuilt on every deploy.
   - `.astro/`: generated types.
 
+## 5. The domain: nathanaelcammay.com
+
+### Who does what
+
+Three separate jobs are involved, and they can be done by three different companies:
+
+| Job | What it is | Who does it here |
+|---|---|---|
+| **Registrar** | Rents you the name, a year at a time | Cloudflare |
+| **DNS** | The phonebook that says which server answers for the name | Cloudflare |
+| **Hosting** | The server that actually sends the files | GitHub Pages |
+
+**Nobody owns a domain outright. You rent it.**
+- **ICANN** sets the global rules for domain names.
+- **Verisign** runs the `.com` **registry**: the master list of who holds which `.com` name.
+- A **registrar** like Cloudflare registers names on that list on your behalf, and handles renewals.
+
+The registration runs a year at a time, and **auto-renew** is on. If it ever lapsed, the site and any email on the domain would stop working, and after a grace period anyone could buy the name.
+
+**Settings on the Cloudflare side:**
+- **Transfer lock** ("client transfer prohibited") stops the domain being moved to another registrar without your approval.
+- **Privacy** hides your contact details from the public domain record. The registry still has them; the public doesn't.
+- **Two-factor authentication** on the Cloudflare account matters most of all. Whoever controls that account controls the domain.
+
+### DNS: the internet's phonebook
+
+Computers connect to each other by **IP address**, not by name. When someone types `nathanaelcammay.com`, their browser first asks a **DNS resolver**, usually run by their ISP, Google or Cloudflare: "what's the address for this name?" The resolver finds out which **nameservers** are in charge of the domain. For us that's Cloudflare's, `melina.ns.cloudflare.com` and `yahir.ns.cloudflare.com`. It asks them, and passes the answer back. Only then does the browser connect.
+
+The answers come from **records** we added in Cloudflare (**DNS → Records**):
+
+| Type | Name | Points to | Why |
+|---|---|---|---|
+| A ×4 | `@` (the domain itself) | `185.199.108.153`, `.109.153`, `.110.153`, `.111.153` | GitHub Pages' IPv4 addresses |
+| AAAA ×4 | `@` | `2606:50c0:8000::153` … `8003::153` | GitHub Pages' IPv6 addresses |
+| CNAME | `www` | `nathanaelcammay.github.io` | Makes `www.` work too; GitHub redirects it to the bare domain |
+| TXT | `_github-pages-challenge-NathanaelCammay` | a random string from GitHub | Proves to GitHub that we control the domain |
+
+**What each record type does:**
+- **A** maps a name to an IPv4 address: the classic four numbers, like `185.199.108.153`.
+- **AAAA** maps a name to an IPv6 address, the newer and much larger address format. Some networks, especially mobile ones, prefer it, so we publish both.
+- **Four addresses for redundancy:** each address is a different GitHub Pages entry point. A browser can use any of them, so the site stays up if one has problems.
+- **CNAME** says "this name is an alias of that name, go and ask there". A name that has a CNAME can't have any other records, and that's why the root domain uses A and AAAA records instead.
+- **TXT** is just text attached to a name. It doesn't direct visitors anywhere. Services use it to check ownership: GitHub gives you a random string, and only someone who controls the domain's DNS can publish it.
+- **TTL** ("time to live") is how long resolvers may cache an answer before asking again. That's why DNS changes can take minutes, or occasionally hours, to show up everywhere.
+
+**Why every record is "DNS only" (grey cloud), not "Proxied" (orange).** With the orange cloud, Cloudflare's servers sit between visitors and GitHub. Visitors would connect to Cloudflare, which would then fetch from GitHub. That gives you extra features (caching, attack protection), but GitHub would then see your domain pointing at Cloudflare instead of at itself, and it couldn't issue the HTTPS certificate. A static portfolio doesn't need the proxy, so we keep it simple.
+
+**Domain verification (the TXT record).** You verify the domain once, in your GitHub *account* settings (**Settings → Pages → Verified domains**). It stops anyone else's GitHub repo from claiming `nathanaelcammay.com`. Without it, if your Pages site were ever switched off while the DNS still pointed at GitHub, someone else could attach their own site to your domain. That attack is called a **domain takeover**.
+
+### Connecting the domain to the site
+
+In the repo, go to **Settings → Pages → Custom domain**, enter `nathanaelcammay.com`, and click **Save**. GitHub then:
+1. Checks the DNS records point at it. It shows "DNS check successful".
+2. Serves the site at `https://nathanaelcammay.com/`, from the root, so the code no longer needs the `/portfolio` base.
+3. Redirects `nathanaelcammay.github.io/portfolio/` and `www.nathanaelcammay.com` to `nathanaelcammay.com`, so old links keep working.
+
+With a GitHub Actions deploy, the custom domain lives in that setting. No `CNAME` file is needed in the repo. That file is only used by the older "deploy from a branch" mode.
+
+### HTTPS: the padlock
+
+**HTTPS** encrypts traffic between the visitor and the server, so nobody in between can read or change it, whether that's public Wi-Fi or an ISP. It's also what makes browsers show the padlock instead of a "Not secure" warning.
+
+It works through a **TLS certificate**: a file, signed by a trusted **certificate authority**, saying "this server really is nathanaelcammay.com". GitHub gets one free from **Let's Encrypt**. Let's Encrypt only issues it after confirming the domain's DNS really points at GitHub, which is another reason the records must be DNS only. Certificates expire after a few months, and GitHub renews them automatically.
+
+When the certificate is ready (anywhere from a few minutes to an hour after saving the custom domain), tick **Enforce HTTPS** in the same settings page. Anyone who types `http://` is then redirected to `https://`.
+
+**What breaks without each piece:**
+- **No DNS records:** the name leads nowhere. The browser says "site can't be reached".
+- **DNS records but no custom domain on GitHub:** GitHub receives the visit but doesn't know which site it's for, so it shows a GitHub 404 page.
+- **Proxied (orange) records:** the certificate can't be issued, and the browser shows a security warning.
+- **A lapsed registration:** everything stops, and the name can be lost.
+
 ## Coming later
 
-- **Custom domain, DNS and HTTPS** (roadmap step 5)
-- **Email on the domain** (roadmap step 6)
+- **Email on the domain** (roadmap step 6, optional): mail to an address `@nathanaelcammay.com`, forwarded to Gmail.

@@ -8,7 +8,7 @@ const links = [
   { path: 'contact', label: 'Contact' },
 ];
 
-// With build.format 'file', Astro reports paths like /portfolio/about.html or /portfolio/index.html.
+// With build.format 'file', Astro reports paths like /about.html or /index.html.
 const trim = (path: string) => path.replace(/(\/index)?\.html$/, '').replace(/\/$/, '');
 
 export default function Nav({ currentPath }: { currentPath: string }) {
