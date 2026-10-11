@@ -4,19 +4,31 @@ import Nav from '../components/Nav';
 import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/Footer';
 import { profile } from '../data/profile';
-import { url } from '../lib/url';
+import { cleanPath, url } from '../lib/url';
 
 interface Props {
 	title?: string;
 	description?: string;
+	/** 'article' for individual project write-ups, 'website' for everything else. */
+	type?: 'website' | 'article';
+	/** Keep the page out of search results (e.g. the 404 page). */
+	noindex?: boolean;
+	/** Structured data (schema.org) describing the page for search engines. */
+	jsonLd?: Record<string, unknown>;
 }
 
 const {
 	title,
 	description = `${profile.name}, software developer in Johannesburg building enterprise systems with C#/.NET, SQL Server and JavaScript.`,
+	type = 'website',
+	noindex = false,
+	jsonLd,
 } = Astro.props;
 
 const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${profile.title}`;
+// The one official address of this page, so search engines don't treat /about and /about.html as duplicates.
+const canonical = new URL(cleanPath(Astro.url.pathname) || '/', Astro.site).href;
+const ogImage = new URL(url('og-image.png'), Astro.site).href;
 ---
 
 <!doctype html>
@@ -24,11 +36,30 @@ const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content={description} />
-		<meta name="generator" content={Astro.generator} />
-		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
-		<link rel="icon" href={url('favicon.ico')} />
 		<title>{fullTitle}</title>
+		<meta name="description" content={description} />
+		{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+		<meta name="theme-color" content="#0e1116" />
+		<meta name="generator" content={Astro.generator} />
+
+		<link rel="icon" href={url('favicon.ico')} sizes="48x48" />
+		<link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+		<link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+		<link rel="sitemap" href={url('sitemap-index.xml')} />
+
+		<!-- Link previews (LinkedIn, WhatsApp, Slack, X...) -->
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content={profile.name} />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={`${profile.name}, ${profile.title}`} />
+		<meta name="twitter:card" content="summary_large_image" />
+
+		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 		<!-- Runs before the page paints, so a saved light theme never flashes dark first. -->
 		<script is:inline>
 			try {
@@ -41,7 +72,7 @@ const fullTitle = title ? `${title} · ${profile.name}` : `${profile.name} · ${
 		<header class="site-header">
 			<div class="container">
 				<Nav currentPath={Astro.url.pathname} />
-				<ThemeToggle client:load />
+				<ThemeToggle client:idle />
 			</div>
 		</header>
 		<main class="container">

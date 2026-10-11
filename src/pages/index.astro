@@ -2,9 +2,21 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { profile } from '../data/profile';
 import { url } from '../lib/url';
+
+// schema.org "Person": tells search engines who this site is about and which profiles are also him.
+const person = {
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: profile.name,
+	jobTitle: profile.title,
+	url: Astro.site?.href,
+	sameAs: [profile.github, profile.linkedin],
+	worksFor: { '@type': 'Organization', name: 'Hollard Insurance' },
+	address: { '@type': 'PostalAddress', addressLocality: 'Johannesburg', addressCountry: 'ZA' },
+};
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={person}>
 	<p class="muted">{profile.title} · {profile.location}</p>
 	<h1>Hi, I'm Nathanael.</h1>
 	<p class="lead">

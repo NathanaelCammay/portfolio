@@ -15,6 +15,7 @@ npm install
 npm run dev      # dev server at http://localhost:4321/
 npm run build    # production build into dist/
 npm run preview  # serve the production build
+npm run images   # regenerate favicon.ico, apple-touch-icon.png and og-image.png
 ```
 
 [docs/hosting.md](docs/hosting.md) explains how the site is built and deployed.

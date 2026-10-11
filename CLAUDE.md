@@ -35,6 +35,14 @@ This is the portfolio site for Nathanael Cammay, a software developer based in J
 - `npm run dev`: dev server at `localhost:4321/`. When Claude starts it, use `npx astro dev --background`. Manage it with `npx astro dev stop`, `status` and `logs`.
 - `npm run build`: builds the site into `dist/`. Run this before opening a PR.
 - `npm run preview`: serves the built `dist/` locally.
+- `npm run images`: regenerates `favicon.ico`, `apple-touch-icon.png` and `og-image.png` in `public/` from `public/favicon.svg` and the template in `scripts/generate-images.mjs`. Run it locally on Windows and commit the output.
+
+### SEO and previews
+
+- `BaseLayout.astro` sets the title, description, canonical URL, Open Graph and Twitter tags for every page. Pass `title` and `description` from each page. Pass `type="article"` for project pages, and `noindex` for pages that shouldn't be in search results.
+- The home page passes schema.org `Person` JSON-LD through the `jsonLd` prop. Keep it in step with `src/data/profile.ts`.
+- The sitemap comes from `@astrojs/sitemap`. `public/robots.txt` points to it.
+- Keep Lighthouse at 100 in all four categories. Interactive islands should use `client:idle` unless they have to work instantly.
 
 ### Astro docs
 
@@ -91,5 +99,5 @@ Tick each item off when its PR is merged.
 3. [x] Base layout, theme toggle, and the Home, About and Contact pages
 4. [x] Projects collection, with this site as the first entry
 5. [x] Custom domain: buy it, point DNS at GitHub Pages, turn on HTTPS, remove `base`
-6. [ ] Email on the domain, forwarded to Gmail
-7. [ ] Polish: SEO meta tags, favicon, social preview image, Lighthouse pass
+6. [ ] Email on the domain. **Deferred** until he takes on freelance work. Don't bring it up before then. When it's time, he'll want to send *and* receive as the domain, not just forward.
+7. [x] Polish: SEO meta tags, favicon, social preview image, Lighthouse pass

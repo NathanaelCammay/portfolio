@@ -1,5 +1,5 @@
 import { profile } from '../data/profile';
-import { url } from '../lib/url';
+import { cleanPath, url } from '../lib/url';
 
 const links = [
   { path: '', label: 'Home' },
@@ -7,9 +7,6 @@ const links = [
   { path: 'about', label: 'About' },
   { path: 'contact', label: 'Contact' },
 ];
-
-// With build.format 'file', Astro reports paths like /about.html or /index.html.
-const trim = (path: string) => path.replace(/(\/index)?\.html$/, '').replace(/\/$/, '');
 
 export default function Nav({ currentPath }: { currentPath: string }) {
   return (
@@ -20,9 +17,9 @@ export default function Nav({ currentPath }: { currentPath: string }) {
       <ul>
         {links.map(({ path, label }) => {
           const href = url(path);
-          const exact = trim(href) === trim(currentPath);
+          const exact = cleanPath(href) === cleanPath(currentPath);
           // Highlight "Projects" on individual project pages too.
-          const section = path !== '' && trim(currentPath).startsWith(`${trim(href)}/`);
+          const section = path !== '' && cleanPath(currentPath).startsWith(`${cleanPath(href)}/`);
           return (
             <li key={label}>
               <a href={href} aria-current={exact ? 'page' : section ? 'true' : undefined}>
