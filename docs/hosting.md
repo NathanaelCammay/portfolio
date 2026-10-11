@@ -197,6 +197,29 @@ When the certificate is ready (anywhere from a few minutes to an hour after savi
 - **Proxied (orange) records:** the certificate can't be issued, and the browser shows a security warning.
 - **A lapsed registration:** everything stops, and the name can be lost.
 
-## Coming later
+## 6. How search engines and link previews see the site
 
-- **Email on the domain** (roadmap step 6, optional): mail to an address `@nathanaelcammay.com`, forwarded to Gmail.
+People aren't the only visitors. Search engines crawl the site, and apps like LinkedIn and WhatsApp fetch it to build a preview card. None of them run your code. They read the HTML `<head>` and a couple of plain files, and `src/layouts/BaseLayout.astro` sets these up for every page.
+
+| Piece | What it is | What breaks without it |
+|---|---|---|
+| `<title>` and `<meta name="description">` | The headline and snippet Google shows in search results | Google invents a snippet from random page text |
+| `<link rel="canonical">` | "This is the one official address of this page" | `/about` and `/about.html` can be treated as duplicate pages, splitting their ranking |
+| Open Graph tags (`og:title`, `og:image`, …) | What LinkedIn, WhatsApp, Slack and others show when the link is pasted | The shared link looks bare: no image, maybe the wrong title |
+| `public/og-image.png` | The 1200×630 preview image, the size every platform expects | No image on the preview card |
+| `/sitemap-index.xml` | A list of every page, generated at build time by `@astrojs/sitemap` | Search engines have to find pages by following links, so they may miss some |
+| `public/robots.txt` | Tells crawlers what they may visit, and where the sitemap is | Crawlers still visit, but have to guess where the sitemap is |
+| JSON-LD on the home page | Structured data saying "this site is about a Person called Nathanael Cammay, who is also these GitHub and LinkedIn profiles" | Google has to work out who the site is about by itself |
+| `404.html` | The page GitHub Pages shows for any address that doesn't exist. It's marked `noindex` so it never appears in search | Visitors get GitHub's generic 404 page, with no way back to the site |
+
+**Icons:** `public/favicon.svg` is the source. `npm run images` (`scripts/generate-images.mjs`) turns it into `favicon.ico` (for older browsers and tools) and `apple-touch-icon.png` (for phone home screens), and draws `og-image.png`. Re-run it after changing the icon or the preview text, then commit the results.
+
+**After deploying**, it's worth checking:
+- LinkedIn's [Post Inspector](https://www.linkedin.com/post-inspector/) shows exactly what your preview card looks like. It also makes LinkedIn re-read the page if you've changed it.
+- [Google Search Console](https://search.google.com/search-console) lets you prove you own the domain (with another DNS TXT record), submit the sitemap, and see which searches show your site.
+
+**Lighthouse** is Google's audit tool. It's built into Chrome DevTools, under the **Lighthouse** tab. It scores Performance, Accessibility, Best Practices and SEO out of 100, and lists anything that's wrong. This site scores 100 in all four. The one thing that cost points was React's runtime, which is loaded for the theme toggle. Hydrating the toggle with `client:idle` (once the page has finished loading) instead of `client:load` took it out of the critical path.
+
+## Deferred
+
+- **Email on the domain** (roadmap step 6): an address `@nathanaelcammay.com`, forwarded to Gmail or a full mailbox. Deferred until Nathanael is doing freelance work.

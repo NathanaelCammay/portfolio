@@ -14,7 +14,7 @@ const { title, summary, stack, repo, live } = project.data;
 const { Content } = await render(project);
 ---
 
-<BaseLayout title={title} description={summary}>
+<BaseLayout title={title} description={summary} type="article">
 	<p><a href={url('projects')}>← All projects</a></p>
 	<h1>{title}</h1>
 	<p class="lead">{summary}</p>
